@@ -1,25 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Shared LVGL XML globals. Keep UI definitions here or in screens/components, not in generated C. -->
 <globals>
-    <api>
-        <!-- Add <enumdefs> here -->
-    </api>
-
+    <api/>
     <consts>
-        <!-- Add <px>, <int>, <color> etc here -->
+        <px name="screen_width" value="800"/>
+        <px name="screen_height" value="480"/>
     </consts>
-
     <styles>
-        <!-- Add <style> tags here -->
+        <style name="status_bar" bg_color="#1F2937" bg_opa="100%" border_width="0" radius="0" pad_left="16" pad_right="16"/>
+        <style name="screen_background" bg_color="#111827" bg_opa="100%"/>
+        <style name="light_text" text_color="#FFFFFF"/>
     </styles>
-
-    <subjects>
-        <!-- Add <int>, <string>, or <float> subjects here -->
-    </subjects>
-
-    <images>
-        <!-- Add <file> or <data> tags here -->
-    </images>
-
-    <fonts>
-        <!-- Add <bin> , <tiny_ttf>, <freetype> tags here -->
-    </fonts>
+    <subjects/>
+    <images/>
+    <fonts/>
 </globals>
