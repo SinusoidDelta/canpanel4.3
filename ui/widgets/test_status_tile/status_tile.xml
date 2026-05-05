@@ -1,0 +1,8 @@
+<widget>
+    <view>
+        <lv_obj width="140" height="80" bg_color="0x263238" radius="8" border_width="1" border_color="0x546E7A">
+            <lv_label text="Node A" x="8" y="8" text_color="0xCFD8DC"/>
+            <lv_label text="ONLINE" x="8" y="36" text_color="0x81C784"/>
+        </lv_obj>
+    </view>
+</widget>
