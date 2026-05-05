@@ -4,6 +4,7 @@
 #include "driver/i2c_master.h"
 #include "esp_check.h"
 #include "esp_err.h"
+#include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_rgb.h"
 #include "esp_lcd_touch_gt911.h"
@@ -15,8 +16,10 @@
 
 #include "fallback_ui.h"
 
-#if HAS_GENERATED_UI
+#if GENERATED_UI_MODE == 1
 #include "ui.h"
+#elif GENERATED_UI_MODE == 2
+#include "main_screen_gen.h"
 #endif
 
 #define LCD_H_RES 800
@@ -178,9 +181,13 @@ void app_main(void)
     ESP_ERROR_CHECK(init_lvgl(panel, touch));
 
     if (lvgl_port_lock(0)) {
-#if HAS_GENERATED_UI
-        ESP_LOGI(TAG, "Loading generated LVGL UI from firmware/main/ui_generated");
+#if GENERATED_UI_MODE == 1
+        ESP_LOGI(TAG, "Loading generated LVGL UI from ui.c");
         ui_init();
+#elif GENERATED_UI_MODE == 2
+        ESP_LOGI(TAG, "Loading generated LVGL screen from main_screen_gen.c");
+        lv_obj_t *screen = main_screen_create();
+        lv_screen_load(screen);
 #else
         ESP_LOGI(TAG, "Loading fallback LVGL UI; run firmware/tools/sync_ui.sh after XML generation");
         fallback_ui_load();
