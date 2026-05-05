@@ -1,13 +1,16 @@
 set(UI_GENERATED_DIR "${CMAKE_CURRENT_LIST_DIR}/ui_generated")
-set(UI_GENERATED_SOURCES "")
 set(UI_INCLUDE_DIRS "ui_fallback")
+set(GENERATED_UI_MODE 0)
 
-if(EXISTS "${UI_GENERATED_DIR}/ui.c")
-    list(APPEND UI_GENERATED_SOURCES "ui_generated/ui.c")
+file(GLOB UI_GENERATED_SOURCES CONFIGURE_DEPENDS "${UI_GENERATED_DIR}/*.c")
+
+if(UI_GENERATED_SOURCES)
     list(APPEND UI_INCLUDE_DIRS "ui_generated")
-    set(HAS_GENERATED_UI 1)
-else()
-    set(HAS_GENERATED_UI 0)
+    if(EXISTS "${UI_GENERATED_DIR}/ui.c")
+        set(GENERATED_UI_MODE 1)
+    elseif(EXISTS "${UI_GENERATED_DIR}/main_screen_gen.c")
+        set(GENERATED_UI_MODE 2)
+    endif()
 endif()
 
 idf_component_register(
@@ -24,4 +27,4 @@ idf_component_register(
         lvgl
 )
 
-target_compile_definitions(${COMPONENT_LIB} PRIVATE HAS_GENERATED_UI=${HAS_GENERATED_UI})
+target_compile_definitions(${COMPONENT_LIB} PRIVATE GENERATED_UI_MODE=${GENERATED_UI_MODE})

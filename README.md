@@ -20,7 +20,7 @@ Generated C is not canonical. If XML and generated C disagree, update XML first 
 - Touch: GT911 capacitive touch over I2C
 - Primary firmware system: ESP-IDF, not PlatformIO
 
-The firmware uses ESP-IDF LCD/touch APIs plus `esp_lvgl_port`. It pins conservative component ranges in `firmware/main/idf_component.yml`; `idf.py build` refreshes `firmware/dependencies.lock` with exact resolved component versions.
+The chosen board-support path is direct ESP-IDF bring-up with the in-tree `esp_lcd` RGB panel driver, Espressif Registry components `esp_lcd_touch_gt911` and `esp_lvgl_port`, and LVGL 9. This avoids PlatformIO and keeps firmware code in `/firmware`. `idf.py build` refreshes `firmware/dependencies.lock` with exact resolved component versions.
 
 ## Repository layout
 
@@ -83,10 +83,18 @@ If you are working from a feature branch, replace `main` with that branch name.
 
 ## Validate and generate UI locally
 
-The exact LVGL Editor CLI command depends on the installed LVGL tool version. This repo provides a wrapper that tries common CLI names:
+The current LVGL Editor CLI documented by LVGL is `lved-cli.js`. Validate and generate with:
 
 ```bash
+lved-cli.js validate ui --errorlimit 25
+lved-cli.js generate ui
 ./firmware/tools/sync_ui.sh
+```
+
+If your LVGL Editor release writes generated files somewhere other than the default project output folders, point the sync step at that directory:
+
+```bash
+LVGL_GENERATED_SRC_DIR=/path/to/generated ./firmware/tools/sync_ui.sh
 ```
 
 Expected behavior:
@@ -104,14 +112,14 @@ If the CLI is not installed, the script exits with instructions. CI still parses
 1. initializes the 800x480 RGB panel using ESP-IDF `esp_lcd` RGB panel APIs
 2. initializes GT911 touch over I2C
 3. starts LVGL through `esp_lvgl_port`
-4. loads generated UI if `firmware/main/ui_generated/ui.c` exists
+4. loads generated UI from `firmware/main/ui_generated` when either a common `ui.c`/`ui.h` pair or LVGL Editor `main_screen_gen.c`/`main_screen_gen.h` screen export exists
 5. otherwise loads the hand-coded fallback screen from `firmware/main/ui_fallback`
 
 The fallback UI is deliberately simple so the display and touch pipeline can be brought up before generated UI is available.
 
 ## Build locally with ESP-IDF
 
-Install ESP-IDF v5.5.2 or newer in the v5.5 line, source its environment, then run:
+Install ESP-IDF v5.5.3 or newer in the v5.5 line, source its environment, then run:
 
 ```bash
 cd firmware
@@ -147,7 +155,7 @@ Replace `/dev/ttyUSB0` with the correct port, such as `/dev/ttyACM0` on Linux or
 - checks required repository structure
 - verifies `ui/project.xml` and `ui/globals.xml` exist
 - parses all UI XML files
-- optionally runs LVGL CLI generation when a compatible CLI is installed
+- optionally runs LVGL CLI validation/generation when `lved-cli.js`, `lvgl`, or `lvgl-editor` is installed
 - builds the ESP-IDF firmware for `esp32s3`
 - uploads firmware artifacts
 
@@ -163,7 +171,7 @@ This workflow is for a lab machine with ESP-IDF installed and the Waveshare boar
 
 ## Compatibility notes and limitations
 
-- The board pin map follows public Waveshare ESP32-S3-Touch-LCD-4.3B examples and may need adjustment if Waveshare revises the hardware.
-- Backlight/reset lines are routed through board support circuitry on some Waveshare variants; the current scaffold focuses on RGB panel, GT911 touch, and LVGL startup.
-- `firmware/main/ui_generated` assumes the generator emits a common `ui.c`/`ui.h` pair with `ui_init()`. If your LVGL generator emits different entry points, update `firmware/main/CMakeLists.txt` and `firmware/main/main.c` accordingly.
+- The board pin map follows Waveshare ESP32-S3-Touch-LCD-4.3B documentation: 800x480 RGB data/control pins on ESP32-S3 GPIOs, GT911 touch on GPIO8/GPIO9 with IRQ on GPIO4, and CH422G-controlled touch/display reset/backlight lines.
+- The first firmware milestone uses ESP-IDF `esp_lcd` RGB panel APIs plus Espressif Registry `esp_lcd_touch_gt911` and `esp_lvgl_port`; CH422G reset/backlight sequencing is listed as an unresolved hardware risk until verified on the BOX unit.
+- `firmware/main/ui_generated` supports a common `ui.c`/`ui.h` pair with `ui_init()` and the LVGL Editor screen export form `main_screen_gen.c`/`main_screen_gen.h` with `main_screen_create()`. If your generator emits different entry points, update `firmware/main/CMakeLists.txt` and `firmware/main/main.c` accordingly.
 - CI can compile firmware and publish artifacts, but only a local machine or self-hosted runner with USB access can flash real hardware.

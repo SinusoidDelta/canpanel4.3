@@ -38,7 +38,7 @@ jobs:
       - name: Optional LVGL Editor CLI validation/generation
         run: |
           set -euo pipefail
-          if command -v lvgl >/dev/null 2>&1 || command -v lvgl-editor >/dev/null 2>&1; then
+          if command -v lved-cli.js >/dev/null 2>&1 || command -v lvgl >/dev/null 2>&1 || command -v lvgl-editor >/dev/null 2>&1; then
             firmware/tools/sync_ui.sh
           else
             echo "LVGL Editor CLI is not installed on this runner; XML parse validation was performed instead."
@@ -47,7 +47,7 @@ jobs:
       - name: Build ESP-IDF firmware
         uses: espressif/esp-idf-ci-action@v1
         with:
-          esp_idf_version: v5.5.2
+          esp_idf_version: v5.5.3
           target: esp32s3
           path: firmware
 
