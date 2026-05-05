@@ -1,0 +1,4 @@
+# ESP-IDF component-manager lock file placeholder.
+# `idf.py build` refreshes this file with exact transitive component versions.
+dependencies: {}
+manifest_hash: unlocked-scaffold

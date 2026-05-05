@@ -1,0 +1,20 @@
+# ESP-IDF build output
+firmware/build/
+firmware/sdkconfig
+firmware/managed_components/**
+!firmware/managed_components/.gitkeep
+
+# Generated LVGL C output; XML under /ui is canonical.
+firmware/main/ui_generated/**
+!firmware/main/ui_generated/.gitkeep
+
+# LVGL Editor preview output
+ui/preview-build/
+ui/file_list_gen.cmake
+ui/component_lib_list_gen.cmake
+
+# Local tooling
+.env
+.venv/
+.vscode/
+.DS_Store

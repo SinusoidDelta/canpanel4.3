@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen permanent="true">
+    <view>
+        <lv_obj width="800" height="480">
+            <style name="screen_background"/>
+            <lv_obj x="0" y="0" width="800" height="48">
+                <style name="status_bar"/>
+                <lv_label text="CAN Panel 4.3" align="left_mid" x="16" y="0">
+                    <style name="light_text"/>
+                </lv_label>
+                <lv_label text="Status: waiting for firmware" align="right_mid" x="-16" y="0">
+                    <style name="light_text"/>
+                </lv_label>
+            </lv_obj>
+            <lv_button x="300" y="190" width="200" height="80">
+                <lv_label text="Start" align="center"/>
+            </lv_button>
+        </lv_obj>
+    </view>
+</screen>

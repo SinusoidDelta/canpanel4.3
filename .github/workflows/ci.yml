@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate-ui-and-build-firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check repository structure
+        run: |
+          set -euo pipefail
+          test -f README.md
+          test -f ui/project.xml
+          test -f ui/globals.xml
+          test -f ui/screens/main_screen.xml
+          test -f firmware/CMakeLists.txt
+          test -f firmware/main/CMakeLists.txt
+          test -f firmware/main/main.c
+          test -f firmware/main/ui_fallback/fallback_ui.c
+          test -x firmware/tools/sync_ui.sh
+
+      - name: Validate LVGL XML parses
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib
+          import xml.etree.ElementTree as ET
+          for path in pathlib.Path('ui').rglob('*.xml'):
+              ET.parse(path)
+              print(f'parsed {path}')
+          PY
+
+      - name: Optional LVGL Editor CLI validation/generation
+        run: |
+          set -euo pipefail
+          if command -v lvgl >/dev/null 2>&1 || command -v lvgl-editor >/dev/null 2>&1; then
+            firmware/tools/sync_ui.sh
+          else
+            echo "LVGL Editor CLI is not installed on this runner; XML parse validation was performed instead."
+          fi
+
+      - name: Build ESP-IDF firmware
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.5.2
+          target: esp32s3
+          path: firmware
+
+      - name: Upload firmware build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: canpanel43-firmware
+          path: |
+            firmware/build/*.bin
+            firmware/build/*.elf
+            firmware/build/*.map
+            firmware/build/bootloader/*.bin
+            firmware/build/partition_table/*.bin
+            firmware/build/flasher_args.json
+          if-no-files-found: error
