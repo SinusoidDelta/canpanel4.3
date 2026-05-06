@@ -4,8 +4,8 @@ This directory is the canonical UI source for `canpanel4.3`. Generated C is a bu
 
 ## Files
 
-- `project.xml` defines the LVGL Editor project targets, including the 800x480 RGB565 Waveshare display preview.
-- `globals.xml` defines shared constants and styles used by screens and components.
+- `project.xml` defines the LVGL Editor project target and its 800x480 preview display. Unsupported Editor fields such as memory entries and display color formats are intentionally omitted.
+- `globals.xml` is kept as the Editor-compatible home for future shared constants, styles, subjects, images, and fonts.
 - `screens/main_screen.xml` defines the first 800x480 screen with a status bar, title label, central status label, and button.
 - `assets/images` and `assets/fonts` are reserved for LVGL Editor-managed assets.
 
@@ -14,10 +14,10 @@ This directory is the canonical UI source for `canpanel4.3`. Generated C is a bu
 Use LVGL Online Share or the LVGL Editor import flow with this GitHub folder URL:
 
 ```text
-https://github.com/SinusoidDelta/canpanel4.3/tree/main/ui
+https://github.com/SinusoidDelta/canpanel4.3/tree/fix-lvgl-editor-ui/ui
 ```
 
-Replace `main` with your branch name when reviewing work from a feature branch.
+Replace `fix-lvgl-editor-ui` with the final merge branch after this work lands.
 
 ## Validate and generate locally
 
