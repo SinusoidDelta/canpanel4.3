@@ -1,15 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  LVGL XML is the canonical UI source of truth for this repository.
-  Generate C into firmware/main/ui_generated only as a build artifact.
--->
-<project>
-    <targets>
-        <target name="waveshare_esp32_s3_touch_lcd_4_3b_box">
-            <display width="800" height="480" color_format="RGB565"/>
-            <memory name="int_ram" size="512K"/>
-            <memory name="ext_ram" size="8M"/>
-            <memory name="flash" size="16M"/>
-        </target>
-    </targets>
+<project name="canpanel4_3">
+	<targets>
+		<target name="waveshare_800x480">
+			<display width="800" height="480" />
+		</target>
+	</targets>
 </project>
