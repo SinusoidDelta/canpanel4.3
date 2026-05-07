@@ -1,1 +1,1 @@
-Reusable LVGL XML components live here. Generated C belongs in `firmware/main/ui_generated`.
+Create XML files here that start with a `<component>` tag
